@@ -26,7 +26,7 @@ Virtual Network nos permite crear un red virtual para todos los nodos que compon
 
 Digamos que es la autopista de comunicación que tiene el cluster y el cual es accesible para todos los nodos que compongan nuestro cluster.
 
-## Worker nodes
+## Worker nodes (Nodos)
 
 ...
 
@@ -34,3 +34,37 @@ Cada uno de los worker nodes WN tiene instalado kubelet permite que los WN se co
 
 Cada uno de los WN serán donde se ejecutarán los distintos contenedores que dan servicio. Los contenedores son desplegados en base a la carga que tengan los WN en ese momento.
 
+Los nodos son el hardware donde se van a correr los despliegues de kubernetes.
+
+Estos pueden ser máquinas físicas o virtuales que son las que enrolamos en el clústes para dar servicio a las aplicaciones que vayamos a desplegar.
+
+## Pods
+Son la unidad mínima dentro del clúster. Es una abstracción que arropa a lo que consideramos un contenedor. Por lo que cada pod tendrá dentro un contenedor ya sea podman o docker en el cual se van a correr las aplicaciones.
+
+Usualmente los pods solo contienen una aplicación.
+
+Los pods se alojan en los nodos para dar servicio y los control nodes son los encargados de manejar los despliegues y las configuraciones de los pods.
+
+Los pods se les asigna una IP virtual dentro de todo el clúster para poder comunicarse entre ellos.
+
+Hay que tener en cuenta es que los pods son efímeros, por lo que estos pueden ser destruidos fácilmente. Cada vez que se genera un nuevo pod, este le asigna una IP nueva, para controlar como se conectan los pods tomando este aspecto y muchos otros más, estan los servicios.
+
+## Service and Network
+
+Los servicios son un mecanismo que tiene Kubernetes que permite que ordenar de forma lógica la comunicación de red entre los pods que la componen. 
+
+Esto permite poder agrupar pods y configurar el cómo se comunican entre ellos de forma dínamica viendo que cada vez que se genera un pod, este obtiene una IP nueva.
+
+### External Service and Internal Service
+Con estos componentes, permitimos que un servicio pueda comunicarse con fuentes externas de forma explícita y segura.
+
+Lo bueno de esto es que podemos definir de forma explícita el cómo y a que se va a tener acceso desde fuera hacía el servicio.
+
+Por ejemplo: Tenemos una backend con acceso a una api y una BBDD MySQL donde almacenaremos los datos. Podemos configurar que sea únicamente accesible los endpoints de la API y no exponemos al público la BBDD que esta corriendo en el mismo servicio.
+
+### Ingress
+Este componente nos permite exponer nuestra aplicación fuera del ambito de kubernetes.
+
+Con este configuramos un servidor web entre Kubernetes y el mundo exterior. Ya podemos exponerlo a internet entre otras cosas según se necesite. 
+
+Los Ingress según la configuración, se pueden usar las siguientes tecnologías para controlar el servidor NGINX, Traefik, HAProxy, Envoy, entre otras.
