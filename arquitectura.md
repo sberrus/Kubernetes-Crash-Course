@@ -65,6 +65,41 @@ Por ejemplo: Tenemos una backend con acceso a una api y una BBDD MySQL donde alm
 ### Ingress
 Este componente nos permite exponer nuestra aplicación fuera del ambito de kubernetes.
 
-Con este configuramos un servidor web entre Kubernetes y el mundo exterior. Ya podemos exponerlo a internet entre otras cosas según se necesite. 
+Con este configuramos la comunicación entre kubernetes y las fuentes externas para que puedan ser accedidas.
+
+Algo así como funciona nginx en un servidor convensional.
 
 Los Ingress según la configuración, se pueden usar las siguientes tecnologías para controlar el servidor NGINX, Traefik, HAProxy, Envoy, entre otras.
+
+## ConfigMap & Secrets
+Esta caracteristica nos permite definir una forma de pasar información entre los pods de forma que no tengamos que modificar constantemente los datos internos de la misma.
+
+Usualmente cuando se desarrolla una aplicación, nosotros definimos ciertos datos para conectarnos a endpoints, BBDD, secretos entre otras cosas ya sea añadiendolo directamente en el código o mediante variables de entorno. Esto hace que en el momento en el que tengamos que hacer algún cambio a nivel de servicio, endpoints, secretos etc... sea engorroso ya que si queremos modificar cualquier cosa, necesitariamos cambiar el código, reconstruir la imagen, subirla etc etc etc... Pero para evitar hacer todo este proceso, Kubernetes nos provee de ConfigMaps y Secrets.
+
+Luego de configurarles, referenciamos esta información a los pods de manera que puedan acceder a estas configuraciones y secretos.
+
+### ConfigMaps
+Esto nos permite definir a nivel del cluster configuraciones que son accesibles por los pods de manera que estos puedan consumir la información que nosotros hayamos definido en esta.
+
+Digamos que es una forma de definir una configuración con "variables de entorno" que sean accesibles por los pods. De forma que si queremos hacer un cambio en una url o algun otro dato que necesitemos modificar, no tengamos que tocar el ciclo de vida de la aplicación con este fin.
+
+### Secret
+Secret es muy parecido a como funciona configMap, pero con la diferencia de que los datos son privados.
+
+Por defecto, Kubernetes lo que hace es almacenar esta información en Base64, lo cual no es seguro de almacenar de esta forma, por lo que además de esto, se recomienda configurar el clúster para que estos datos sean ofuscados correctamente.
+
+Para esto podemos seguir las siguientes pautas:
+
+- **Habilitar encriptación en Rest** para los secretos.
+- Habilitar y configurar las reglas de RBAC para restringir quien puede leer según que datos en base a políticas de seguridad y accesibilidad claras. Además, con estas reglas, podemos definir quien tiene acceso a leer, modificar o eliminar los secretos en el clúster.
+
+
+## Volume
+Los volumes en kubernetes nos permiten definir un espacio donde se almacenarán los datos de forma persistente. Esto con el fin de evitar que en el momento de que un pod muera y se cree otro, los datos que estaba manejando este pod no se pierdan. Esto es realmente útil para almacenamiento de BBDD y cualquier otro tipo de almacenamiento de información como pueda ser Prometheus, o los walls de cualquier aplicación no sean volátiles.
+
+Este almacenamiento puede ser directamente en los discos de los Worker Nodes o en almacenamiento en la nube fuera del clúster dependiendo de la configuración y arquitectura del mismo.
+
+Esto nos permite tener datos persistentes indiferentemente de el ciclo de vida de los pods que dan servicio.
+
+Kubernetes no tiene la responsabilidad de la integridad de los datos, por lo que los administradores del clúster son los que deben manejar los backups, persistencia de los datos, accesibilidad de los datos y almacenes etc...
+
