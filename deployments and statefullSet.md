@@ -20,3 +20,15 @@ Para solucionar este mecanismo y a la vez mantener la alta disponibilidad de los
 Es preferible manejar con Kubernetes aplicaciones y servicios que no tengan estas limitaciones y manejar de forma externa la administración de las BBDDs ya que estas suelen tener mecanismos y caracteristicas para clusterizar.
 
 Si bien es posible hacerlo con Kubernetes, es preferible no manejar esto dentro ya que puede ser una tarea bastante engorrosa y complicada.
+
+## En palabras simples
+Los deployments estan diseñados para aquellos pods que pueden correr en paralelo sin que esto sea un problema a nivel del manejo de los datos de la aplicación, tampoco estan pensados para almacenar datos de forma persistente.
+
+Por ejemplo: Frontend web, backends rest, microservicios, jobs de procesamiento etc...
+
+Por otro lado los statefulset, estan pensados para ser más persistentes dentro del cluster. Estos tienen una identidad única y estable, tienen nombres predecibles estan pensados para escribir y mantener estado como almacenamiento persistente entre otras cosas.
+
+Ejemplos de estos son: Bases de datos, Kafka, Redis, Zookeeper, Elastic entre otros.
+
+# Anotaciones finales
+Esta de las características que vuelve potente el uso de kubernetes ya que al distribuir los sistemas, nos permite tener alta disponibilidad, mejorar las tareas de escalabilidad, etc, etc, etc...
