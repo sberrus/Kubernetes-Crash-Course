@@ -25,5 +25,8 @@ Luego, tendremos bloques de configuración que detallamos a continuación:
 2. Specification (spec): En este bloque, definimos las especificaciones del componente. En estos, dependiendo del tipo de componente, definimos las configuraciones del estado deseado que debe tener el componente dentro del clúster.
 3. Status: Esta última parte va a ser anexada, configurada y gestionada directamente por kubernetes. Sabiendo que los ficheros de configuración son declarativos, lo que hace kubernetes es comprobar constantemente si el estado deseado del componente y el estado actual del mismo son iguales. En el caso de que no lo sean, el clúster siempre va a auto-corregirse de manera que siempre cumpla con el estado deseado del componente.
 
+Suele recomendarse tener un repositorio de GIT para mantener controladas los ficheros de configuración de forma ordenada y gestionando las versiones de la misma.
+
 ## etcd. El cerebro del clúster.
 Esta pieza es la encargada de almacenar los estados del cluster y de sus componentes desplegados. En este se encuentran los distintos estados en los que se encuentra el clúster y las configuraciones del mismo. De manera que desde aquí, se gestiona todo el estado general del clúster.
+

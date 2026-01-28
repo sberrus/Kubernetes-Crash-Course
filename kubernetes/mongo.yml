@@ -1,0 +1,37 @@
+# Si bien es cierto que los servicios y los deployments se pueden separar en ficheros diferentes, lo más usual es que los encuentres en el mismo fichero.
+# Para esto, los ficheros se pueden separar con "---". Esta es una característica de yaml más que de kubernetes.
+# Como todos los Servicios necesitan un Deployment, lo más usual es tenerlos en el mismo fichero de configuración.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+# ^^^ CABECERA ^^^
+
+# Las especificaciones contienen por lo general configuraciones que son especificas para cada componente.
+# Para este caso, tenemos las especificaciones necesarias para los deployment.
+spec:
+  replicas: 3 # cantidad de pods
+  selector:
+    matchLabels:
+      app: nginx
+
+  # La template es la configuración que van a tener todos los pods que esten en este deployment.
+  template:
+    # La metadata que se encuentra dentro del template es que se le transmite a todos los pods que conforman el deployment.
+    metadata:
+      labels:
+        app: nginx
+    # Lo mismo para las especificaciones. Son las especificaciones que se les va a pasar a cada uno de los pods.
+    spec:
+      # container es donde espeficamos los pods y las configuraciones que van a tener cada uno.
+      # Es básicamente lo mismo que le pasaríamos a los pods cuando los configuramos con docker o podman por ejemplo. Nombre del pod, puertos a abrir, coniguraciones, variables de entorno, etc...
+      containers:
+        - name: nginx # Nombre del contenedor
+          image: nginx:1.7.9 # Imagen que se va a usar
+
+          # En este caso podemos definir los puertos que va a exponer dicho pod
+          ports:
+            - containerPort: 80

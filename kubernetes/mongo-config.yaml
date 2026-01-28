@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+# con este bloque definimos los metadatos que son el cómo vamos a referenciar el resto de componentes con este.
+metadata:
+  name: mongo-config
+
+# El bloque data son los datos que exponemos. Son directamente campo:valor donde exponemos los datos para que sean accesibles
+data:
+  # En este caso, vamos a hacer referencia al servicio de mongo que se hara en su respectivo componente
+  mongo-url: mongo-service
