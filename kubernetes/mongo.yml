@@ -5,33 +5,71 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: mongodb-deployment
   labels:
-    app: nginx
+    app: mongodb
 # ^^^ CABECERA ^^^
 
 # Las especificaciones contienen por lo general configuraciones que son especificas para cada componente.
 # Para este caso, tenemos las especificaciones necesarias para los deployment.
 spec:
-  replicas: 3 # cantidad de pods
+  replicas: 1 # cantidad de pods
   selector:
     matchLabels:
-      app: nginx
+      app: mongodb
 
   # La template es la configuración que van a tener todos los pods que esten en este deployment.
   template:
     # La metadata que se encuentra dentro del template es que se le transmite a todos los pods que conforman el deployment.
     metadata:
       labels:
-        app: nginx
+        app: mongodb
     # Lo mismo para las especificaciones. Son las especificaciones que se les va a pasar a cada uno de los pods.
     spec:
       # container es donde espeficamos los pods y las configuraciones que van a tener cada uno.
       # Es básicamente lo mismo que le pasaríamos a los pods cuando los configuramos con docker o podman por ejemplo. Nombre del pod, puertos a abrir, coniguraciones, variables de entorno, etc...
       containers:
-        - name: nginx # Nombre del contenedor
-          image: nginx:1.7.9 # Imagen que se va a usar
+        - name: mongodb # Nombre del contenedor
+          image: mongo:noble # Imagen que se va a usar
 
           # En este caso podemos definir los puertos que va a exponer dicho pod
           ports:
-            - containerPort: 80
+            - containerPort: 27017
+
+          # Para pasarle variables de entorno a los pods lo hacemos mediante la key "env" que consta de una colección de name: value: los cuales pasaremos el nombre y el valor de la variable de entorno.
+          # En este caso, lo usaremos para pasar las variables de entorno necesarias para la configuración de la BBDD.
+          # Por otro lado, estas variables de entorno las cogeremos del componente secret que hemos definido anteriormente.
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              # Para coger los datos del componente secret necesitamos hacer uso de valueFrom: el cual podemos hacer referencia al componente secret y poder acceder a los valores que expone.
+              valueFrom: # Para indicar que vamos a buscar la variable de entorno en un componente en concreto.
+                secretKeyRef: # Para hacer referencia al componente secret donde vamos a sacar el dato.
+                  name: mongo-secret # Aqui indicamos la label name del metadato del componente secret que vamos a utilizar.
+                  key: mongo-user # aqui definimos la key que vamos a utilizar que estará en el data.<key> del componente secret
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value:
+                valueFrom:
+                  secretKeyRef:
+                    name: mongo-secret
+                    key: mongo-password
+
+---
+### BLOQUE SERVICE
+# Definimos el service en el mismo fichero por comodidad
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service # nombre de referencia del servicio
+spec:
+  # En el caso de los selectors de los servicios lo que indicamos es a que pods va a redirigirse el tráfico a la hora de acceder a este.
+  # De manera que para asociar el servicio a los pods del deployment de mongo-db seguiremos el siguiente ejemplo.
+  # De esta forma podemos configurar en el cluster que todas las llamadas que hagamos al servicio de mongo-service van a redirigir el tráfico a los pods que tengan la label app: mongodb
+  # Muy parecido a como se define la configuración de los deployments del componente mongodb-deployment para los pods.
+  selector:
+    app: mongodb
+
+  # En este bloque definimos los puertos que vamos a exponer para poder comunicarnos con los pods.
+  ports:
+    - protocol: TCP # tipo de conexión
+      port: 27017 # Puerto expuesto de entrada. Este puerto puede definirse cual sea siempre que este abierto, pero, para simplificar, se suele usar el mismo puerto al que se hace forward de ser posible. En este caso usaremos el mismio puerto al que vamos a hacer forward a los pods.
+      targetPort: 27017 # Puerto al que se hace forward a los pods. Como los pods tiene el puerto 27017 para comunciarnos con mongodb, deberemos utilizar el mismo puerto para que kubernetes sea capaz de enviar el tráfico al puerto correspondiente.
