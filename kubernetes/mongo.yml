@@ -40,18 +40,17 @@ spec:
           # En este caso, lo usaremos para pasar las variables de entorno necesarias para la configuración de la BBDD.
           # Por otro lado, estas variables de entorno las cogeremos del componente secret que hemos definido anteriormente.
           env:
-            - name: MONGO_INITDB_ROOT_USERNAME
-              # Para coger los datos del componente secret necesitamos hacer uso de valueFrom: el cual podemos hacer referencia al componente secret y poder acceder a los valores que expone.
-              valueFrom: # Para indicar que vamos a buscar la variable de entorno en un componente en concreto.
-                secretKeyRef: # Para hacer referencia al componente secret donde vamos a sacar el dato.
-                  name: mongo-secret # Aqui indicamos la label name del metadato del componente secret que vamos a utilizar.
-                  key: mongo-user # aqui definimos la key que vamos a utilizar que estará en el data.<key> del componente secret
-            - name: MONGO_INITDB_ROOT_PASSWORD
-              value:
-                valueFrom:
-                  secretKeyRef:
-                    name: mongo-secret
-                    key: mongo-password
+          - name: MONGO_INITDB_ROOT_USERNAME
+            # Para coger los datos del componente secret necesitamos hacer uso de valueFrom: el cual podemos hacer referencia al componente secret y poder acceder a los valores que expone.
+            valueFrom: # Para indicar que vamos a buscar la variable de entorno en un componente en concreto.
+              secretKeyRef: # Para hacer referencia al componente secret donde vamos a sacar el dato.
+                name: mongo-secret # Aqui indicamos la label name del metadato del componente secret que vamos a utilizar.
+                key: mongo-user # aqui definimos la key que vamos a utilizar que estará en el data.<key> del componente secret
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: mongo-password
 
 ---
 ### BLOQUE SERVICE

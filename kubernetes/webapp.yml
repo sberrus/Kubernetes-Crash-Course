@@ -19,15 +19,35 @@ spec:
           image: nanajanashia/k8s-demo-app:v1.0
           ports:
             - containerPort: 3000
+          env:
+            - name: USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-user
+            - name: USER_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-password
+
+            # En este caso, para referenciar a un configmap lo hacemos parecido a como lo haríamos para coger los datos de los secret components, pero haciendo uso de la key "configMapKeyRef" y el resto del comportamiento es similar.
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-config
+                  key: mongo-url # en este caso, para sacar la url se hace referencia al servicio mongo-service donde definimos que la url se va a sacar de allí. Por eso los servicios son importantes en kubernetes, porque de esa forma podemos hacer referencia al mismo para acceder a él.
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: webapp-service
 spec:
+  type: NodePort
   selector:
     app: webapp
   ports:
     - protocol: TCP
       port: 3000
       targetPort: 3000
+      nodePort: 30100
