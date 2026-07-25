@@ -53,4 +53,3 @@ External Traffic Policy:  Cluster
 Internal Traffic Policy:  Cluster
 Events:                   <none>
 ```
-

@@ -54,3 +54,14 @@ Los contenedores dentro del pod, comparten la misma dirección del pod que los a
 
 Todos los pods dentro del contenedor son accesibles entre sí siempre y cuando se haya configurado correctamente el "service".
 
+Para que sea accesible desde fuera, se debe tener configurado el proxy para que se alcance a los nodos donde esta desplegado el servicio.
+
+# Administración de los pods
+``` shell
+# Accedemos al a consola del contenedor
+kubectl exec -it [pod-name] --container [container-name] -- /bin/sh
+
+# Matamos un pod ya desplegado. --force y --grace-period es para matar el pod de forma forzosa.
+kubectl delete -f [fichero-despliegue] --force --grace-period=0
+```
+
