@@ -20,11 +20,7 @@ El control plane es la parte crítica del cluster siendo este el cerebro de nues
 
 Tomando esto en cuenta, como mínimo deberíamos tener 2 control plane para poder tener un mínimo de HA en el sistema evitando caídas y posibles fallas de acceso al sistema; aunque en entornos productivos, lo suyo es que hayan multiples master para evitar una perdida de servicio por inaccesibilidad al sistema.
 
-## Virtual network
 
-Virtual Network nos permite crear un red virtual para todos los nodos que componen el cluster de manera que podamos gestionar la lógica del cómo se trata la red interna del cluster en todo momento. 
-
-Digamos que es la autopista de comunicación que tiene el cluster y el cual es accesible para todos los nodos que compongan nuestro cluster.
 
 ## Worker nodes (Nodos)
 
@@ -38,16 +34,7 @@ Los nodos son el hardware donde se van a correr los despliegues de kubernetes.
 
 Estos pueden ser máquinas físicas o virtuales que son las que enrolamos en el clústes para dar servicio a las aplicaciones que vayamos a desplegar.
 
-## Pods
-Son la unidad mínima dentro del clúster. Es una abstracción que arropa a lo que consideramos un contenedor. Por lo que cada pod tendrá dentro un contenedor ya sea podman o docker en el cual se van a correr las aplicaciones.
 
-Usualmente los pods solo contienen una aplicación.
-
-Los pods se alojan en los nodos para dar servicio y los control nodes son los encargados de manejar los despliegues y las configuraciones de los pods.
-
-Los pods se les asigna una IP virtual dentro de todo el clúster para poder comunicarse entre ellos.
-
-Hay que tener en cuenta es que los pods son efímeros, por lo que estos pueden ser destruidos fácilmente. Cada vez que se genera un nuevo pod, este le asigna una IP nueva, para controlar como se conectan los pods tomando este aspecto y muchos otros más, estan los servicios.
 
 ## Service and Network
 
