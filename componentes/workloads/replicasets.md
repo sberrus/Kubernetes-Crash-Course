@@ -21,6 +21,7 @@ spec:
   selector:
     matchLabels:
       tier: frontend
+      
   template:
     metadata:
       labels:
@@ -33,3 +34,5 @@ spec:
 
 ## Diferencia entre ReplicaSet and Deployment?
 Los deployments son en sí son ReplicaSet, pero con capacidades adicionales que ayudan a gestionar mejor los recursos de la aplicación.
+
+Cuando creas deployments, se crean de forma predeterminada los replicasets.

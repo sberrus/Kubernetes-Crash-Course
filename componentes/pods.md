@@ -56,6 +56,8 @@ Todos los pods dentro del contenedor son accesibles entre sí siempre y cuando s
 
 Para que sea accesible desde fuera, se debe tener configurado el proxy para que se alcance a los nodos donde esta desplegado el servicio.
 
+A nivel de red del cluster, hay que pensar que todos los pods dentro del cluster tienen comunicación entre sí. Son una especie de abstracción donde el pod hace referencia a un VM. No siendo lo mismo, pero a fines ilustrativos, se puede usar como referencia. 
+
 # Administración de los pods
 ``` shell
 # Accedemos al a consola del contenedor
