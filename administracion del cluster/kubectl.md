@@ -18,3 +18,16 @@ En este pod se instala el driver de containerización (podman, docker, vm etc...
 
 Y luego dentro del pod de minikube es que se instancian el resto de nodos del clúster per sé.
 
+## -- en los exec
+Una cosa a tomar en cuenta principalmente cuando se quiere acceder a la consola de un pod, es el cómo ejecutamos comandos dentro de la consola. 
+
+Por ejemplo: `kubectl exec -it pod/web-0 -- /bin/bash`
+
+Como se puede observar, hay un `--` estos caracteres indican a kubectl donde acaban los flags y comandos de kubectl per sé y empieza los comandos que quieres pasar a la consola.
+
+Sin ese `--` kubectl podría interpretar las flags que queremos pasar a la consola e interpretarlos como flags de kubectl. Por ejemplo:
+
+``` bash
+kubectl exec -it pod/web-0 ls -l /tmp # sin --, kubectl podría interpretar -l como una flag para kubectl. 
+kubectl exec -it pod/web-0 -- ls -l /tmp # En este no hay problema, todo lo que esta previo al -- pertenece a kubectl y lo posterior, pertenece al comando que queremos pasarle directamente al pod.
+```
