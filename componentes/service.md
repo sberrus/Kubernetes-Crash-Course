@@ -20,3 +20,12 @@ Cuando se configuran los servicios como NodePort, todos los worker nodes que for
 En el caso de minikube, al ser un contenedor, podemos coger la IP para poder acceder mediante el comando `kubectl get node -o wide` desplegando la información de los nodos que conforman el clúster.
 
 Otra cosa que debemos tener en cuenta es que la flag `-o wide` se puede pasar a cualqueir componente para ver más detalles de los mismos.
+
+# tags
+En los services, nosotros definimos mediante los `spec.selector` a donde queremos redirigir el tráfico.
+
+Los services lo que hacen es que apuntan el tráfico a los pods que contengan los tags definidos en el campo `spec.selector`. 
+
+Los deployments crean los replicaset, los replicaset crean los pods con las etiquetas y los pods reciben el tráfico solo si los tags machean con los tags que se definen en el servicio en el campo `spec.selector`.
+
+Hay que tener en cuenta que los tags, son agrupaciones lógicas de los componentes dentro del clúster. Dependiendo de cada tipo de componente, se usan los tags para una cosa u otra.

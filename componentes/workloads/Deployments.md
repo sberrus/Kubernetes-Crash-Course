@@ -55,3 +55,22 @@ spec:
 ```
 
 ![Cheatsheet de kubectl para los deployments](<deployment management cheatsheet.png>)
+
+# Blue Green deployments
+Supongamos el siguiente ejemplo:
+
+Tenemos 2 versiones de una app que queremos desplegar, pero la versión actualizada tiene `breaking changes` por lo que no son compatibles entre sí. En estos casos, si queremos hacer el update, se va a romper la aplicación y no es lo que queremos. 
+
+Para estos casos en concretos, tenemos un concepto llamado BLue-Green deployments. 
+
+La idea es que mediante los tags, podemos orquestar las diferentes versiones de nuestra aplicación.
+
+![bluegreen deployments](<bluegreen deployments.png>)
+
+La idea es que tengamos diferenciadas las aplicaciones de forma que esten ambas desplegadas en el clúster. Y cuando se hayan realizado los cambios correctamente de lo que se este rompiendo, en el service, hacemos el cambio de los tags objetivos a los pods correspondientes.
+
+![bluegreen deployments service change](<bluegreen deployments service change.png>)
+
+Volviendo al caso, esto nos permite realizar los cambios que sean necesarios para que la aplicación pueda correr correctamente. Cuando este todo corregido para que la aplicación pueda correr correctamente, se realiza los cambios a nivel de servicio para que el tráfico vaya a los pods con las etiquetas `version=1` a los pods con `version=2`.
+
+Importante tener en cuenta que al estar la aplicación desplegada con ambos servicios activos, hay que tener recursos en el clúster para poder manejar ambas aplicaciones corriendo simultaneamente.
