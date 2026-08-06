@@ -8,7 +8,7 @@ kind: CronJob
 metadata:
   name: hello
 spec:
-  schedule: "* * * * *"
+  schedule: "* * * * *" # Esto siempre es UTC
   jobTemplate:
     spec:
       template:
