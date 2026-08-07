@@ -60,7 +60,10 @@ Otra cosa que debemos tener en cuenta es que la flag `-o wide` se puede pasar a 
 ### Acceso externo
 Cómo se comento, los nodeports permiten que los workernodes que forman parte del clúster abran los puertos definidos en nodePort, por lo que en teoría se podría configurar para que desde internet, sea posible acceder al clúster. Si bine es posible, no es lo recomendado ya que al hacer esto, si la petición cae en un nodo que no es el que esta alojando el pod con el servicio expuesto, va a haber un salto entre el host que recibe la petición al host que tiene el pod per sé, haciendo que haya una carga de red innecesaria. 
 
-Para estos casos, es mejor configurar configurar componentes más dedicados para este fin como puede ser 
+Para estos casos, es mejor configurar configurar componentes más dedicados para este fin como puede ser LoadBalancer, API Gateway entre otros. Se habla más en detalle al respecto en [Exernal access](../arquitectura/External%20access.md).
+
+### NodePort cheatsheet
+![nodeport cheatsheet](<nodeport cheatsheet.png>)
 
 # tags y metadatos
 ## spec.selector
@@ -71,3 +74,12 @@ Los services lo que hacen es que apuntan el tráfico a los pods que contengan lo
 Los deployments crean los replicaset, los replicaset crean los pods con las etiquetas y los pods reciben el tráfico solo si los tags machean con los tags que se definen en el servicio en el campo `spec.selector`.
 
 Hay que tener en cuenta que los tags, son agrupaciones lógicas de los componentes dentro del clúster. Dependiendo de cada tipo de componente, se usan los tags para una cosa u otra.
+
+## Load Balancing
+Para realizar load blanacing, tenemos 2 formas de hacerlo a nivel de service. 
+
+La idea de estos servicios es la de crear una IP virtual que nos permita tener un NodePort repartido en el clúster y que el `load balancer` reparta las peticiones de forma ordenada a los pods correspondientes.
+
+Lo que hay que entender es que los `load balancer` a nivel de service, lo que hacen es crear una IP virtual para poder enrutar el tráfico entre los nodos. Es un mix entre ClusterIP y NodePort ya que al recibir las peticiones, llegan a una IP Virtual que luego manda el tráfico a los nodos disponibles y por ende a los pods que sea necesario llegar.
+
+Esto actualmente se realizar mejor con los componentes Ingress y GatewayAPI. que son más modernos y optimizados para este fin.

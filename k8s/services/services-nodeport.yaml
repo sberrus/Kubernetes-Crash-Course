@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-nodeport
+  labels:
+    app: nginx
+spec:
+  type: NodePort # definimos el tipo de service como NodePort
+  ports:
+    - nodePort: 32410 # puerto que se expondrá en todos los nodos. Dentro del rango 32000 y 32767
+      port: 80
+      targetPort: http
+  selector:
+    app: nginx
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - name: http
+              containerPort: 80
