@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-clusterip # identifica al servicio y además es el fqdn que se usa para acceder a los recursos de este servicio.
+  labels:
+    app: nginx
+spec:
+  ports:
+    - port: 80 # Este es el puerto que abre el servicio para poder acceder al recurso
+      targetPort: http # Este es el puerto del pod el cual el servicio va a enrutar el tráfico. Puede usarse directamente el puerto o como en este caso, podemos usar la referencia definida en el campo "name" en la definición de los puertos del pod. Por lo que si el puerto del contenedor cambia, no hace falta cambiar el puerto en el servicio.
+
+  selector:
+    app: nginx # el label que define a que pods va a enviar el tráfico el servicio. Este debe coincidir con el label objetivo en el pod. En este caso "app: nginx" debe coincidir con el label "app: nginx" del pod definido en el metadata del pod per sé.
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment # identifica al deployment
+  labels:
+    app: nginx
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx # Este tambien debe coincidir con el pod para poder aplicar las reglas que va a utilizar el ReplicaSet a la hora de configurar los pods y sus ciclos de vida.
+
+  template:
+    metadata:
+      labels: # Estos son los labels que se van a pasar a los pods. Este es el que identifica a los pods y en base a estos tags, es como vamos a poder configurar en el clúster que componentes van a aplicar a qué pods.
+        app: nginx # En este caso, todos los pods tendrán la label "app: nginx" por lo que se pueden aplicar configuraciones especificas para estos pods en concreto en base a los labels.
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - name: http # Este campo nos ayuda a darle un nombre al puerto del contenedor, luego este nombre podemos usarlo en el servicio para poder referenciarnos al puerto por el nombre, en lugar de usar el puerto per sé y ayuda a tener más separadas las responsabilidades del servicio y del pod.
+              containerPort: 80 # Este es el puerto que se abre en el pod para poder enrutar el tráfico.
