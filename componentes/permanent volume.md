@@ -1,5 +1,5 @@
-# Permanent Volume
-Los permanent volumes, son volumenes gestionados por kubernetes que nos permiten tener un volumen persistente de datos para los componentes del clúster.
+# Persistent Volume
+Los Persistent volumes, son volumenes gestionados por kubernetes que nos permiten tener un volumen persistente de datos para los componentes del clúster.
 
 Esto es realmente útil para configurar persistencia de datos o por ejemplo, para poder hacer que varios pods puedan acceder al mismo contenido dentro del clúster. 
 
@@ -15,7 +15,7 @@ Lo más habitual es que los `PV` se generen dinámicamente a la hora de crear un
 
 Cómo analogía, se podría decir que los `PV` son parecidos a como conceptualmente trabajan los `Logical Volume` en sistemas UNIX y los PVC como los `Logical Volumes`.
 
-# Permanent Volume Claim (PVC)
+# Persistent Volume Claim (PVC)
 Los PVC es una solicitud que se hace desde StatefullSet al clúster para que los pods puedan acceder al `PV`.
 
 Esto con el fin de darle persistencia de datos a los pods, ya que estos son efímeros y al crearse uno nuevo, se crea todo el sistema de ficheros interno del pod.

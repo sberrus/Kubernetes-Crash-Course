@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+        - mountPath: "/var/www/html"
+          name: mypv # Este name indica la referencia que va a utilizar para el PVC que se montará en el pod. Igual a como funcionan las referencias en los servicios para definir un nombre para un puerto en concreto para solo modificarlo en un solo sitio de ser necesario. Si "volumes.[?].name" cambia su configuración, como estamos accediendo en base a una referencia, cambiará para el pod también.
+  volumes:
+    - name: mypv # asignamos un nombre a la referencia de este volumen a montar en el/los pods.
+      persistentVolumeClaim:
+        claimName: myclaim # nombre del PVC al que queremos montar en el pod.
