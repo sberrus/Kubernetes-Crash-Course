@@ -1,0 +1,9 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: Standard # identificador de recurso
+provisioner: kubernetes.io/azure-disk # plugin del proveedor externo.
+# Parámetros de configuración de los proveedores (Estos varian dependiendo del proveedor).
+parameters:
+  storageaccounttype: Standard_LRS
+  kind: Managed

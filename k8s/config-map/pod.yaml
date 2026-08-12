@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      env:
+        - name: STATE # Nombre de variable de entorno que se configurará en el pod.
+          # Definimos desde donde se coge el valor para la variable de entorno. En este caso, desde el "config map"
+          valueFrom:
+            configMapKeyRef:
+              name: cm-example # nombre del recurso "config map"
+              key: state # campo del config map que queremos consultar.

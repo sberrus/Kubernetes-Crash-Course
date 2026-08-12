@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: podfilesystemconfigmap
+spec:
+  volumes:
+    # Creamos un nuevo volumen usando los valores de cm-example para montarlo como fs
+    - name: volmap
+      configMap:
+        name: cm-example
+
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+        # referenciamos volmap y lo montamos en el los contenedores
+        - name: volmap
+          mountPath: /etc/config

@@ -24,3 +24,13 @@ spec:
   hostPath:
     path: "/data/"
 ```
+
+## Estados de los PV
+Los PV pueden tener los siguientes estados:
+- Available: Es un recurso que esta disponible y no ha sido reclamado.
+- Bound: El recurso ya ha sido reclamado.
+- Released: El recurso ha sido liberado, pero sigue estando en el clúster.
+- Failed: El recurso ha fallado al intentar hacer el reclamo del mismo.
+
+## cheatsheet
+![pv and pvc cheatsheet](<pv and pvc cheatsheet.png>)
