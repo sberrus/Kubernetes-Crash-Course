@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-probed-pod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+
+      startupProbe:
+        httpGet: # Este campo determina que se va a realizar una petición GET con la configuración definida a continuación.
+          path: /healthz # Ruta que va a consultar el probe.
+          port: 80 # Puerto que va a consultar el probe.
+        failureThreshold: 3 # determina cuantos intentos va a realizar el clúster antes de marcar el pod como activo.
+        periodSeconds: 10 # determina cuantos segundos va a tardar el clúster en realizar cada intento.
+
+      readinessProbe:
+        tcpSocket: # Kubelet intenta realizar una conexión tcp con al socket indicado. Hasta que kubelet no logre realizar conexión, el clúster no marcará el pod como ready.
+          port: 8080 # Puerto al que se va a intentar realizar la conexión.
+        initialDelaySeconds: 5 # Delay principal para realizar la conexión, va a esperar 5 segundos antes de intentar realizar el probe.
+        periodSeconds: 10 # Intervalo de tiempo de ejecución de cada probe.
+
+      # En este caso es similar a startup, solo que lo que va a realizar es realizar las llamadas al endpoint configurado y si falla, el clúster reiniciará el pod.
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 80
+        failureThreshold: 3
+        periodSeconds: 10
